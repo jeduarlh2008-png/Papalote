@@ -1,11 +1,5 @@
-# ==================================================
 # PRÁCTICA 4 — CRUD EN EQUIPO
-# Programación de Redes — UPQ
-# ==================================================
 
-# --------------------------
-# ✅ Código base (de la Práctica 3)
-# --------------------------
 from fastapi import FastAPI, HTTPException, Response
 from pydantic import BaseModel
 from typing import List
@@ -24,10 +18,6 @@ inventario: List[Dispositivo] = [
     Dispositivo(nombre="AP1", tipo="access point", ip="10.0.0.3", activo=True),
 ]
 
-# --------------------------
-# ✅ Paso 4.3 — Función común de búsqueda
-# (La agrega y sube primero el integrante C)
-# --------------------------
 def buscar(nombre: str) -> Dispositivo | None:
     """Devuelve el equipo con ese nombre, o None si no existe."""
     for equipo in inventario:
@@ -47,9 +37,6 @@ async def obtener(nombre: str):
         raise HTTPException(status_code=404, detail=f"No existe el equipo {nombre}")
     return equipo
 
-# ==================================================
-# 🔵 INTEGRANTE A — ALTA (POST)
-# ==================================================
 @app.post("/dispositivos", status_code=201, summary="Crear nuevo dispositivo")
 async def crear(nuevo: Dispositivo):
     """Da de alta un dispositivo. Rechaza nombres repetidos."""
@@ -57,10 +44,6 @@ async def crear(nuevo: Dispositivo):
         raise HTTPException(status_code=409, detail=f"Ya existe el equipo {nuevo.nombre}")
     inventario.append(nuevo)
     return nuevo
-
-# ==================================================
-# 🟡 INTEGRANTE B — ACTUALIZACIÓN (PUT + PATCH)
-# ==================================================
 
 # Modelo parcial para PATCH
 class DispositivoParcial(BaseModel):
@@ -88,9 +71,6 @@ async def modificar(nombre: str, cambios: DispositivoParcial):
         setattr(equipo, campo, valor)
     return equipo
 
-# ==================================================
-# 🔴 INTEGRANTE C — BAJA (DELETE)
-# ==================================================
 @app.delete("/dispositivos/{nombre}", status_code=204, summary="Eliminar dispositivo")
 async def eliminar(nombre: str):
     """Da de baja un dispositivo del inventario."""
